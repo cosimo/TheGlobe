@@ -11,4 +11,4 @@ pushd browser
 rm -rf dist
 
 npm install
-npm run build
+npm run build -- --base='/TheGlobe/'
