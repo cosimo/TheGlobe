@@ -1,0 +1,6 @@
+certifi>=2022.9.24
+click
+datadog-api-client
+python-dateutil
+flask
+flask-cors

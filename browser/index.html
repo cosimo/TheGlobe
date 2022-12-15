@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Globe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      width: 100vw;
+      height: 100vh;
+      font-family: 'Lato', sans-serif;
+      background-color: black;
+    }
+
+    #vis {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    #ui {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      z-index: 2;
+    }
+
+    .data {
+      background-color: rgba(20, 20, 20, 0.5);
+      padding: 0.5rem 2rem 1rem 2rem;
+      color: #f2f2f2;
+    }
+
+    .stat-title {
+      font-weight: bold;
+      font-size: 3rem;
+      margin: 0 0 0.2rem 0;
+    }
+
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      will-change: contents;
+      font-size: 2rem;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div id="ui">
+    <div class="data">
+      <div class="stat-title"><!-- Globe title --></div>
+      <div class="stat">
+        <div id="metric1_title"></div><div id="metric1_value"></div>
+      </div>
+      <div class="stat">
+        <div id="metric2_title"></div><div id="metric2_value"></div>
+      </div>
+    </div>
+  </div>
+  <div id="vis"></div>
+</div>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>
