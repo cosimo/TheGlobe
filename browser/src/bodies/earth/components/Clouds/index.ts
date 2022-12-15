@@ -3,7 +3,7 @@ import * as THREE from "three";
 
 import {gui, showDebug} from "../../../../debug";
 
-const cloudsTexture = new THREE.TextureLoader().load('/textures/earthCloud.png');
+const cloudsTexture = new THREE.TextureLoader().load('textures/earthCloud.png');
 
 const settings = {
   visible: true,

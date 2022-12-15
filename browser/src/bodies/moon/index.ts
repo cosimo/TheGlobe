@@ -3,7 +3,7 @@ import * as THREE from "three";
 
 import {gui, showDebug} from "../../debug";
 
-const moonTexture = new THREE.TextureLoader().load("/textures/lroc_color_poles_1k.jpg");
+const moonTexture = new THREE.TextureLoader().load("textures/lroc_color_poles_1k.jpg");
 
 const settings = {
   visible: true,

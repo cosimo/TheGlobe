@@ -6,11 +6,11 @@ import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
 import globeVertexShader from "./shaders/vertex.glsl";
 import globeFragmentShader from "./shaders/fragment.glsl";
 
-const earthTexture = new THREE.TextureLoader().load('/textures/earthmap10k.jpg');
-const earthBumpMapTexture = new THREE.TextureLoader().load('/textures/earthbump4k.jpg');
-const earthSpecularHighlightMap = new THREE.TextureLoader().load('/textures/earthspec4k.jpg');
-const earthLightMap = new THREE.TextureLoader().load('/textures/earthAtNight.jpg');
-const earthLightMapBW = new THREE.TextureLoader().load('/textures/earthMapBW.png');
+const earthTexture = new THREE.TextureLoader().load('textures/earthmap10k.jpg');
+const earthBumpMapTexture = new THREE.TextureLoader().load('textures/earthbump4k.jpg');
+const earthSpecularHighlightMap = new THREE.TextureLoader().load('textures/earthspec4k.jpg');
+const earthLightMap = new THREE.TextureLoader().load('textures/earthAtNight.jpg');
+const earthLightMapBW = new THREE.TextureLoader().load('textures/earthMapBW.png');
 
 const lightMaps = {
   color: earthLightMap,
