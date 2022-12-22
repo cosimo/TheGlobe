@@ -3,7 +3,9 @@ import * as THREE from "three";
 
 import {gui, showDebug} from "../../debug";
 
-const moonTexture = new THREE.TextureLoader().load("textures/lroc_color_poles_1k.jpg");
+const textureLoader = new THREE.TextureLoader();
+const moonTexture = textureLoader.load("textures/lroc_color_poles_2k.jpg");
+const moonDisplacementTexture = textureLoader.load("textures/ldem_3_8bit.jpg");
 
 const settings = {
   visible: true,
@@ -37,6 +39,8 @@ export class Moon implements UpdatableMesh {
 
     this.#material = new THREE.MeshPhongMaterial({
       map: moonTexture,
+      bumpMap: moonDisplacementTexture,
+      bumpScale: settings.material.bumpScale,
       specular: settings.material.specular,
       wireframe: settings.material.wireframe,
     });
@@ -119,6 +123,13 @@ export class Moon implements UpdatableMesh {
     materialFolder
       .addColor(settings.material, 'specular')
       .onChange((value: string) => this.#material.specular = new THREE.Color(value))
+
+    materialFolder
+      .add(settings.material, 'bumpScale')
+      .min(0)
+      .max(0.25)
+      .step(0.001)
+      .onChange((value: number) => this.#material.bumpScale = value )
 
     materialFolder
       .add(settings.material, 'wireframe')
