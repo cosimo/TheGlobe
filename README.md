@@ -107,6 +107,8 @@ This project is made possible thanks to the following third-party assets and sou
 
 * NASA Earth and Moon publicly available texture assets from https://visibleearth.nasa.gov and https://svs.gsfc.nasa.gov/
 
+* NASA ISS 3D model asset from https://solarsystem.nasa.gov/resources/2378/international-space-station-3d-model/
+
 ## Acknowledgements
 
 I have wanted to build this project for a very long time. I lacked shaders knowledge and realized I needed some help if I really wanted to get this project finished one day.
