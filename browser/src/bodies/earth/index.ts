@@ -53,7 +53,7 @@ export class Earth implements UpdatableMesh {
   rotateForTime(datetime?: number) {
     // Initial fixed rotation is necessary to place the Earth's texture correctly
     // with regards to where the Sun is going to illuminate it
-    const initialEarthRotation = Math.PI;
+    const initialEarthRotation = -1.75; //Math.PI / 2;
     const timeEarthRotation = this.getYRotationForTime(datetime);
     this.#globe.getMesh().rotation.set(0, initialEarthRotation + timeEarthRotation, 0);
     this.#dataPointsManager.getMesh().rotation.set(0, initialEarthRotation + timeEarthRotation, 0);
