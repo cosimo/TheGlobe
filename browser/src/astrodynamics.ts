@@ -482,13 +482,54 @@ function positionFromEquatorialCoords(ra: number, dec: number, r: number) {
     const y = r * Math.cos(dec) * Math.sin(ra);
     const z = r * Math.sin(dec);
 
+    return rotateJ2000Coords(x, y, z);
+
     // WebGL x, y, z axes don't correspond to astronomical conventions
     // https://www.jameswatkins.me/posts/converting-equatorial-to-cartesian.html
-    return {
-        x: y,
-        y: z,
-        z: -x,
-    };
+    //return {
+    //    x: y,
+    //   y: z,
+    //    z: -x,
+    //};
+}
+
+export function rotateJ2000Coords(x_j2000, y_j2000, z_j2000) {
+
+  // Get the current time in Julian Date (JD)
+  const now = new Date();
+  const JD = (now.getTime() / 86400000.0) + 2440587.5;
+
+  // Define the transformation matrix from J2000 to the current time
+  const T = [
+    [0.9999999999999928, -0.0000000707827970, 0.0000000805627700],
+    [0.0000000707827970, 0.9999999999999974, -0.0000000356813400],
+    [-0.0000000805627700, 0.0000000356813400, 0.9999999999999969]
+  ];
+
+  // Apply the transformation matrix to the J2000 coordinates
+  const x_now = T[0][0] * x_j2000 + T[0][1] * y_j2000 + T[0][2] * z_j2000;
+  const y_now = T[1][0] * x_j2000 + T[1][1] * y_j2000 + T[1][2] * z_j2000;
+  const z_now = T[2][0] * x_j2000 + T[2][1] * y_j2000 + T[2][2] * z_j2000;
+
+  // Define the rotation matrix for the Earth's rotation
+  const theta = 2 * Math.PI * (JD - 2451545) / 365.25;
+  const R = [
+    [Math.cos(theta), -Math.sin(theta), 0],
+    [Math.sin(theta), Math.cos(theta), 0],
+    [0, 0, 1]
+  ];
+
+  // Apply the rotation matrix to the coordinates
+  const x = R[0][0] * x_now + R[0][1] * y_now + R[0][2] * z_now;
+  const y = R[1][0] * x_now + R[1][1] * y_now + R[1][2] * z_now;
+  const z = R[2][0] * x_now + R[2][1] * y_now + R[2][2] * z_now;
+
+  return {
+      x: x,
+      y: z,
+      z: -y,
+  };
+
 }
 
 // Returns date and time in the (weird) format `YYYYMMDD.hhmm`, f.ex. 20221121.1858

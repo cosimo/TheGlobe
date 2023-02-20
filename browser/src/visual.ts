@@ -19,6 +19,7 @@ import {
 import { Earth } from "./bodies/earth";
 import { Stars } from "./bodies/stars";
 import { Sun } from "./bodies/sun";
+import { Iss } from "./bodies/iss";
 
 import {Controller} from "lil-gui";
 import { PointLight } from 'three';
@@ -60,6 +61,7 @@ export class Visual {
   #rootElement: HTMLElement;
   #lightsGroup: THREE.Object3D;
   #sun: Sun;
+  #iss: Iss;
   #composer: EffectComposer;
 
   #earth: Earth | undefined;
@@ -193,13 +195,21 @@ export class Visual {
 
   private initCamera() {
     const fov = 50;
-    const near = 0.1;
+    const near = 0.001;
     const aspect = window.innerWidth / window.innerHeight;
     const far = 400.0;
 
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+
+    // Normal camera position, looking at Earth
     camera.position.y = 1.75;
     camera.position.z = 2.0;
+
+    // ISS tracking
+    //camera.position.x = 1.2;
+    //camera.position.y = -0.0001;
+    //camera.position.z = -0.0002;
+
     camera.zoom = 0.01;
 
     return camera;
@@ -240,6 +250,8 @@ export class Visual {
 
     const stars = new Stars();
     this.#scene.add(stars.getMesh());
+
+    this.#iss = new Iss(this.#scene);
 
     this.#lightsGroup.add(this.#pointLight);
     this.#lightsGroup.add(this.#sun.getMesh());
@@ -340,6 +352,15 @@ export class Visual {
 
   private updateScene(dt: number) {
     this.#earth?.update(dt);
+    this.#iss?.update(dt);
+
+    const cameraTrackingIss = false;
+    if (cameraTrackingIss && this.#iss?.getMesh()) {
+      const issMesh = this.#iss.getMesh();
+      this.#camera.position.x = issMesh.position.x;
+      this.#camera.position.y = issMesh.position.y;
+      this.#camera.position.z = issMesh.position.z - 0.01;
+    }
   }
 
   private setupEventListeners() {
