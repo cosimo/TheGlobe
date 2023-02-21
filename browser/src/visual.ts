@@ -81,6 +81,8 @@ export class Visual {
     this.#pointLight = this.initPointlight();
     this.#lightsGroup = this.initLightsGroup();
 
+    this.#iss = new Iss(this.#scene);
+
     this.setupScene();
     this.setupEventListeners();
 
