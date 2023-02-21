@@ -1,7 +1,6 @@
 import {UpdatableMesh} from "../../interfaces/UpdatableMesh";
 import * as THREE from "three";
-import {GLTFLoader} from "three/addons/loaders/GLTFLoader.js";
-import {SimplifyModifier} from "three/examples/jsm/modifiers/SimplifyModifier.js";
+import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader.js";
 import {km} from "../../ephemeris";
 import {rotateJ2000Coords} from "../../astrodynamics";
 import {gui, showDebug} from "../../debug";
@@ -50,36 +49,23 @@ const gltfLoader = new GLTFLoader();
 
 
 export class Iss implements UpdatableMesh {
-  #mesh: THREE.Mesh;
+  #mesh: THREE.Mesh | THREE.Object3D;
   #group: THREE.Group;
 
   constructor(scene: THREE.Scene) {
     const url = '/models/ISS_stationary.glb';
+    const self = this;
+    this.#group = new THREE.Group();
+
     gltfLoader.load(url, (gltf) => {
 
       const modelScene = gltf.scene;
 
-      // Tried to simplify the ISS model since it's huge, but no success
-      // https://stackoverflow.com/questions/52087673/a-frame-three-js-simplify-modifier-on-gltfglb-models
-      const simplifyModel = false;
-
-      if (simplifyModel) {
-        const simplifyModifier = new SimplifyModifier();
-        modelScene.traverse(function(o) {
-          if (o.isMesh) {
-            var numVertices = o.geometry.attributes.position.count;
-            o.geometry = simplifyModifier.modify(o.geometry, Math.floor(numVertices * settings.geometry.simplifyFactor));
-          }
-        });
-      }
-
-      this.#group = new THREE.Group();
-
       // https://stackoverflow.com/questions/75255282/create-a-mesh-from-gltflaoder-load-in-thre-js
-      this.#mesh = modelScene.children[0];
-      this.#group.add(this.#mesh);
+      self.#mesh = modelScene.children[0];
+      self.#group.add(this.#mesh);
 
-      scene.add(this.#group);
+      scene.add(self.#group);
 
       if (showDebug) {
         this.initDebug();
@@ -89,7 +75,7 @@ export class Iss implements UpdatableMesh {
     });
   }
 
-  getMesh(): THREE.Mesh {
+  getMesh(): THREE.Mesh | THREE.Object3D {
     return this.#mesh;
   }
 
@@ -196,14 +182,14 @@ export class Iss implements UpdatableMesh {
     this.#mesh.visible = settings.visible;
   }
 
-  update(dt) {
+  update(dt: number) {
     // TODO: Comment out the state vector update until we got the ephemeris
     // lines search and match figured out. The ISS would be lost into space
     // otherwise :-)
     //
-    //stateVector.position.x += stateVector.velocity.x * dt;
-    //stateVector.position.y += stateVector.velocity.y * dt;
-    //stateVector.position.z += stateVector.velocity.z * dt;
+    stateVector.position.x += stateVector.velocity.x * dt;
+    stateVector.position.y += stateVector.velocity.y * dt;
+    stateVector.position.z += stateVector.velocity.z * dt;
     //console.log("updated iss state vector (x="+stateVector.position.x+
     //            ", y="+stateVector.position.y+
     //            ", z="+stateVector.position.z+")");
