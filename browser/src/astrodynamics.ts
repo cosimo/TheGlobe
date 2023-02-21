@@ -493,7 +493,7 @@ function positionFromEquatorialCoords(ra: number, dec: number, r: number) {
     //};
 }
 
-export function rotateJ2000Coords(x_j2000, y_j2000, z_j2000) {
+export function rotateJ2000Coords(x_j2000: number, y_j2000: number, z_j2000: number) {
 
   // Get the current time in Julian Date (JD)
   const now = new Date();
