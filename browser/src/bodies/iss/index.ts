@@ -53,7 +53,7 @@ export class Iss implements UpdatableMesh {
   #group: THREE.Group;
 
   constructor(scene: THREE.Scene) {
-    const url = '/models/ISS_stationary.glb';
+    const url = 'models/ISS_stationary.glb';
     const self = this;
     this.#group = new THREE.Group();
 
