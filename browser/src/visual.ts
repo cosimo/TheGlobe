@@ -253,8 +253,6 @@ export class Visual {
     const stars = new Stars();
     this.#scene.add(stars.getMesh());
 
-    this.#iss = new Iss(this.#scene);
-
     this.#lightsGroup.add(this.#pointLight);
     this.#lightsGroup.add(this.#sun.getMesh());
 
