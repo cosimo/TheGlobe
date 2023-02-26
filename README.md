@@ -85,13 +85,14 @@ In particular, the work of [Keith Burnett](http://www.stargazing.net/kepler/kpb.
 
 ## Are you planning to add the ISS to the simulation?
 
-Yes! At least try to.
+The ISS is in there already.
 
-NASA has [public ephemeris files](https://spotthestation.nasa.gov/trajectory_data.cfm) for the ISS that should be reasonably easy to use to render accurate position and velocity of the ISS in this simulation.
+NASA has [public ephemeris files](https://spotthestation.nasa.gov/trajectory_data.cfm) for the ISS that are parsed and used to calculate the live position and velocity of the ISS. The station's scale is also correct, so that means that unless you know exactly where the ISS is, it won't be easy to find it :-)
 
 ## Licensing Information
 
 Copyright © Kahoot! ASA 2022. All rights reserved.
+Copyright © Cosimo Streppone 2023. All rights reserved.
 
 This project’s source code is licensed under the 3-clause BSD license (see [LICENSE](./LICENSE) file in this distribution or online at [https://opensource.org/licenses/BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause)).
 
@@ -108,6 +109,8 @@ This project is made possible thanks to the following third-party assets and sou
 * NASA Earth and Moon publicly available texture assets from https://visibleearth.nasa.gov and https://svs.gsfc.nasa.gov/
 
 * NASA ISS 3D model asset from https://solarsystem.nasa.gov/resources/2378/international-space-station-3d-model/
+
+* NASA’s Johnson Space Center for the public ISS trajectory data published at https://spotthestation.nasa.gov/trajectory_data.cfm
 
 ## Acknowledgements
 
