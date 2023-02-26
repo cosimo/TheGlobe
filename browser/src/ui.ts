@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {getData, getMetrics} from './data';
 import { stats, gui } from "./debug";
 import {Visual} from './visual';
+import {loadIssTrajectoryData} from './ephemeris';
 
 import {Tween, Easing, update as tweenUpdate} from '@tweenjs/tween.js';
 
@@ -64,6 +65,7 @@ function update() {
   });
 }
 
+loadIssTrajectoryData();
 update();
 
 export function updateEarth() {

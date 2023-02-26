@@ -57,6 +57,7 @@ export class Visual {
   #scene: THREE.Scene;
   #renderer: THREE.WebGLRenderer;
   #camera: THREE.PerspectiveCamera;
+  #cameraGroup: THREE.Group;
   #controls: OrbitControls;
   #rootElement: HTMLElement;
   #lightsGroup: THREE.Object3D;
@@ -73,7 +74,10 @@ export class Visual {
     this.#scene = new THREE.Scene();
 
     this.#renderer = this.initRenderer();
+    this.#cameraGroup = new THREE.Group();
     this.#camera = this.initCamera();
+    this.#cameraGroup.add(this.#camera);
+
     this.#controls = this.initControls();
     this.#composer = new EffectComposer(this.#renderer);
 
@@ -206,12 +210,6 @@ export class Visual {
     // Normal camera position, looking at Earth
     camera.position.y = 1.75;
     camera.position.z = 2.0;
-
-    // ISS tracking
-    //camera.position.x = 1.2;
-    //camera.position.y = -0.0001;
-    //camera.position.z = -0.0002;
-
     camera.zoom = 0.01;
 
     return camera;
@@ -245,15 +243,13 @@ export class Visual {
   }
 
   private setupScene() {
-    this.#scene.add(this.#camera);
+    this.#scene.add(this.#cameraGroup);
 
     this.#earth = new Earth();
     this.#scene.add(this.#earth.getMesh());
 
     const stars = new Stars();
     this.#scene.add(stars.getMesh());
-
-    this.#iss = new Iss(this.#scene);
 
     this.#lightsGroup.add(this.#pointLight);
     this.#lightsGroup.add(this.#sun.getMesh());
@@ -358,10 +354,11 @@ export class Visual {
 
     const cameraTrackingIss = false;
     if (cameraTrackingIss && this.#iss?.getMesh()) {
-      const issMesh = this.#iss.getMesh();
-      this.#camera.position.x = issMesh.position.x;
-      this.#camera.position.y = issMesh.position.y;
-      this.#camera.position.z = issMesh.position.z - 0.01;
+      const iss = this.#iss.getMesh();
+      // Need to replicate the same unexplained rotation as the ISS group
+      this.#cameraGroup.rotation.set(0, 0.8, 0);
+      this.#camera.position.set(iss.position.x, iss.position.y - 0.01, iss.position.z - 0.01);
+      this.#camera.updateProjectionMatrix();
     }
   }
 

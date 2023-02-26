@@ -1,15 +1,10 @@
 import {UpdatableMesh} from "../../interfaces/UpdatableMesh";
 import * as THREE from "three";
 import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader.js";
-import {km} from "../../ephemeris";
-import {rotateJ2000Coords} from "../../astrodynamics";
+import {getCurrentIssStateVector} from "../../ephemeris";
 import {gui, showDebug} from "../../debug";
+import { rotateJ2000Coords } from "../../astrodynamics";
 
-// From the NASA's ISS ephemeris
-// 2023-02-19T20:56:00.000 3239.569828342850 4055.919681103620 -4397.260437300800 -6.65824933190568 1.63790540882254 -3.38910165692533
-// TODO load this on-demand every few minutes
-const issPos = rotateJ2000Coords(3239.569828342850, 4055.919681103620, -4397.260437300800);
-const issVel = {x:-6.65824933190568, y:1.63790540882254, z:-3.38910165692533};
 
 const settings = {
   visible: true,
@@ -25,22 +20,8 @@ const settings = {
 
     // For still mysterious reasons, an initial sync rotation is needed
     group_x: 0,
-    group_y: -1.75,
+    group_y: 0.8,
     group_z: 0,
-  },
-};
-
-const stateVector = {
-  position: {
-    // 417.5 km over Earth is 0.13091 3D space coordinate units
-    x: km(issPos.x),
-    y: km(issPos.y),
-    z: km(issPos.z),
-  },
-  velocity: {
-    x: km(issVel.x),
-    y: km(issVel.z),
-    z: -km(issVel.y),
   },
 };
 
@@ -77,6 +58,10 @@ export class Iss implements UpdatableMesh {
 
   getMesh(): THREE.Mesh | THREE.Object3D {
     return this.#mesh;
+  }
+  
+  getGroup(): THREE.Group {
+    return this.#group;
   }
 
   initDebug() {
@@ -169,31 +154,44 @@ export class Iss implements UpdatableMesh {
     if (!this.#mesh) {
       return;
     }
+
     this.#mesh.scale.set(settings.geometry.scale, settings.geometry.scale, settings.geometry.scale);
-    this.#mesh.position.x = stateVector.position.x;
-    this.#mesh.position.y = stateVector.position.y;
-    this.#mesh.position.z = stateVector.position.z;
+
+    const stateVector = getCurrentIssStateVector(undefined);
+    if (!stateVector) {
+      return;
+    }
+
+    // Rotate our state vector coordinates but keep the state vector itself
+    // in the J2000 frame of reference, or we'd get our velocity updates wrong
+    const rotatedCoords = rotateJ2000Coords(stateVector.position.x, stateVector.position.y, stateVector.position.z);
+
+    this.#mesh.position.x = rotatedCoords.x;
+    this.#mesh.position.y = rotatedCoords.y;
+    this.#mesh.position.z = rotatedCoords.z;
+
     this.#mesh.rotation.x = settings.rotation.x;
     this.#mesh.rotation.y = settings.rotation.y;
     this.#mesh.rotation.z = settings.rotation.z;
+
     this.#group.rotation.x = settings.rotation.group_x;
     this.#group.rotation.y = settings.rotation.group_y;
     this.#group.rotation.z = settings.rotation.group_z;
+
     this.#mesh.visible = settings.visible;
   }
 
   update(dt: number) {
-    // TODO: Comment out the state vector update until we got the ephemeris
-    // lines search and match figured out. The ISS would be lost into space
-    // otherwise :-)
-    //
+    const stateVector = getCurrentIssStateVector(undefined);
+    if (!stateVector) {
+      return;
+    }
+
     stateVector.position.x += stateVector.velocity.x * dt;
     stateVector.position.y += stateVector.velocity.y * dt;
     stateVector.position.z += stateVector.velocity.z * dt;
-    //console.log("updated iss state vector (x="+stateVector.position.x+
-    //            ", y="+stateVector.position.y+
-    //            ", z="+stateVector.position.z+")");
-    //this.updateGeometry();
+
+    this.updateGeometry();
   }
 
 }
