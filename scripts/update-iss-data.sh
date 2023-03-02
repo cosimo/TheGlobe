@@ -23,7 +23,7 @@ download_iss_data() {
 commit_updated_file() {
     git config --global user.name "Cosimo Streppone"
     git config --global user.email "cosimo@streppone.it"
-    git commit -am "Periodic update of the ISS trajectory data\n\nfrom https://spotthestation.nasa.gov/trajectory_data.cfm"
+    git commit -am "Periodic update of the ISS data from https://spotthestation.nasa.gov/trajectory_data.cfm"
     git push
 }
 
