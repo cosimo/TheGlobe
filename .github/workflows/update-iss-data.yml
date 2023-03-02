@@ -1,0 +1,21 @@
+#
+# ISS Ephemeris data files (https://spotthestation.nasa.gov/trajectory_data.cfm)
+# cover about two weeks of ISS orbits. After that, we need to download the
+# updated data and store it into our `browser/public/data` directory.
+#
+
+name: Update ISS trajectory data
+
+on:
+  schedule:
+      - cron:  '13 1 2,16 * *'
+  workflow_dispatch:
+
+jobs:
+
+  update-iss-data:
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: scripts/update-iss-data.sh
